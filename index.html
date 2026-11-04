@@ -1,0 +1,308 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Agent Starter Kit</title>
+<meta name="description" content="Fill in AGENTS.md for your project and download a ready coding-agent setup: roles, process, skills, prompts.">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧰</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
+<style>
+:root{
+  --paper:#E6ECF0; --sheet:#F7F9FA; --ink:#14263A; --muted:#55687A; --rule:#C3CFD8;
+  --mark:#F3D54E; --mark-ink:#3A2F00; --filled:#1F6F5C; --focus:#2B5FD9;
+  --display:"Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --sans:"IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono:"IBM Plex Mono", ui-monospace, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --paper:#0F1A25; --sheet:#16232F; --ink:#DCE6EE; --muted:#8FA3B4; --rule:#2A3B4A;
+    --mark:#E5C53A; --mark-ink:#241C00; --filled:#6FD3B6; --focus:#7FA6FF; color-scheme: dark; }
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{background:var(--paper);color:var(--ink);font:16px/1.55 var(--sans);
+  padding:env(safe-area-inset-top,0) 0 env(safe-area-inset-bottom,0)}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--focus);outline-offset:2px;border-radius:3px}
+header{display:grid;grid-template-columns:1fr auto;gap:1rem 2rem;align-items:end;
+  padding:2.2rem clamp(1rem,4vw,3rem) 1.4rem;border-bottom:1px solid var(--rule)}
+h1{font:800 clamp(2.2rem,5vw,3.6rem)/1 var(--display);letter-spacing:-.02em;margin:0}
+h1 .bracket{color:var(--muted);font-weight:400}
+.lede{grid-column:1;margin:.6rem 0 0;max-width:62ch;color:var(--muted)}
+.actions{display:flex;gap:.6rem;flex-wrap:wrap;grid-row:1/3;grid-column:2;align-self:center}
+button{font:600 .95rem var(--sans);cursor:pointer;border-radius:6px;padding:.6rem 1rem;
+  border:1px solid var(--ink);background:transparent;color:var(--ink)}
+button.primary{background:var(--ink);color:var(--sheet)}
+button:hover{filter:brightness(1.08)}
+.progress{font:500 .9rem var(--sans);color:var(--muted);margin-top:.5rem}
+.progress b{color:var(--ink)}
+main{display:grid;grid-template-columns:15rem minmax(0,1fr) 21rem;min-height:calc(100vh - 9rem)}
+nav{border-right:1px solid var(--rule);padding:1.2rem .8rem;overflow:auto}
+nav h2,aside h2{font:600 1rem var(--display);margin:0 0 .6rem .4rem}
+.tree{list-style:none;margin:0;padding:0;font:400 .85rem var(--mono)}
+.tree li button{all:unset;display:block;width:100%;box-sizing:border-box;padding:.28rem .5rem;
+  border-radius:4px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tree li button:hover{background:var(--sheet)}
+.tree li button[aria-current="true"]{background:var(--ink);color:var(--sheet)}
+.tree .dir{color:var(--muted);padding:.6rem .5rem .1rem;font-size:.78rem}
+.tree .todo{display:inline-block;min-width:1.3em;margin-left:.3em;padding:0 .3em;border-radius:3px;
+  background:var(--mark);color:var(--mark-ink);font-size:.72rem;text-align:center}
+.viewer{padding:1.2rem clamp(1rem,3vw,2rem);min-width:0}
+.vhead{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-bottom:.7rem}
+.vhead .path{font:600 1rem var(--mono);overflow-wrap:anywhere}
+.vhead .what{color:var(--muted);font-size:.9rem;margin-top:.1rem}
+.vhead button{padding:.4rem .8rem;font-size:.85rem}
+pre.file{background:var(--sheet);border:1px solid var(--rule);border-radius:8px;margin:0;
+  padding:1.1rem 1.2rem;font:400 .86rem/1.65 var(--mono);white-space:pre-wrap;overflow-wrap:anywhere;
+  max-width:88ch}
+pre.file .h{font-weight:600}
+pre.file .c{color:var(--muted)}
+pre.file .ph{background:var(--mark);color:var(--mark-ink);border-radius:3px;padding:0 .15em}
+pre.file .fv{color:var(--filled);box-shadow:inset 0 -2px 0 var(--filled)}
+aside{border-left:1px solid var(--rule);padding:1.2rem 1.2rem 2rem;overflow:auto}
+aside p.hint{color:var(--muted);font-size:.88rem;margin:-.2rem 0 1rem .1rem}
+.field{margin-bottom:.95rem}
+.field label{display:block;font:500 .88rem var(--sans);margin-bottom:.25rem}
+.field small{display:block;color:var(--muted);font-size:.78rem;margin-top:.2rem}
+input,textarea{width:100%;font:400 .86rem var(--mono);color:var(--ink);background:var(--sheet);
+  border:1px solid var(--rule);border-radius:6px;padding:.5rem .6rem}
+textarea{min-height:4.6rem;resize:vertical}
+.row{display:flex;gap:.5rem;flex-wrap:wrap;margin:.4rem 0 1.2rem}
+.row button{padding:.4rem .7rem;font-size:.82rem}
+.toast{position:fixed;left:50%;bottom:calc(1.2rem + env(safe-area-inset-bottom,0));transform:translateX(-50%);
+  background:var(--ink);color:var(--sheet);padding:.55rem 1rem;border-radius:6px;font-size:.9rem;
+  opacity:0;pointer-events:none;transition:opacity .2s}
+.toast.show{opacity:1}
+footer{border-top:1px solid var(--rule);padding:1rem clamp(1rem,4vw,3rem);color:var(--muted);font-size:.85rem}
+@media (max-width:1100px){ main{grid-template-columns:13rem minmax(0,1fr)} aside{grid-column:1/-1;border-left:0;border-top:1px solid var(--rule)} }
+@media (max-width:720px){
+  header{grid-template-columns:1fr} .actions{grid-column:1;grid-row:auto}
+  main{grid-template-columns:1fr} nav{border-right:0;border-bottom:1px solid var(--rule);max-height:14rem}
+}
+@media (prefers-reduced-motion:reduce){ .toast{transition:none} }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1><span class="bracket">&lt;</span>Agent Starter Kit<span class="bracket">&gt;</span></h1>
+    <p class="lede">A ready setup for coding agents in your repo: one AGENTS.md, a PM → engineer → QA team, a process the main session can orchestrate, and skills for building and shipping. Fill in the yellow blanks, then download.</p>
+    <p class="progress" id="progress"></p>
+  </div>
+  <div class="actions">
+    <button class="primary" id="dl">Download kit (.zip)</button>
+  </div>
+</header>
+<main>
+  <nav aria-label="Kit files">
+    <h2>Files</h2>
+    <ul class="tree" id="tree"></ul>
+  </nav>
+  <section class="viewer" aria-live="polite">
+    <div class="vhead">
+      <div><div class="path" id="vpath"></div><div class="what" id="vwhat"></div></div>
+      <button id="copy">Copy file</button>
+    </div>
+    <pre class="file" id="vbody"></pre>
+  </section>
+  <aside aria-label="Your project">
+    <h2>Your project</h2>
+    <p class="hint">Everything here writes into AGENTS.md and the testing guidelines. Saved in this browser only.</p>
+    <div class="row">
+      <button id="preset">Fill Python + React defaults</button>
+      <button id="clear">Clear</button>
+    </div>
+    <div id="form"></div>
+  </aside>
+</main>
+<footer>Based on Alexey Grigorev’s Coding Agent Setup Kit and his AI Dev Tools Zoomcamp posts on aishippingblog.com. Built by <a href="https://github.com/qusai18">qusai18</a>.</footer>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+const KIT = {"README.md": {"what": "What's inside, setup, and the habits that matter", "content": "# Agent Starter Kit\n\nA drop-in setup for working with coding agents (Claude Code, Codex, Cursor,\nOpenCode, Copilot) in any project. Based on Alexey Grigorev's Coding Agent\nSetup Kit and his AI Dev Tools Zoomcamp posts.\n\n## What's inside\n\n| Path | What it's for |\n|---|---|\n| `AGENTS.md` | What every new session needs: project, commands, rules, no-go zones, links to docs |\n| `CLAUDE.md` | One line, `@AGENTS.md`, so Claude Code reads the same file |\n| `_docs/process.md` | Tasks, roles, the orchestrator lifecycle, optional parallel worktrees |\n| `_docs/task-template.md` | A groomed task: goal, acceptance criteria, out of scope, constraints |\n| `_docs/testing-guidelines.md` | Starter testing rules - grow it as you correct the agent |\n| `_docs/team/` | PM, software engineer, QA engineer roles |\n| `.agents/agents/` | Subagent definitions that point at the roles |\n| `.agents/skills/release` | Release a new version |\n| `.agents/skills/build-fullstack` | Plan \u2192 mocked React frontend \u2192 OpenAPI \u2192 FastAPI \u2192 SQLAlchemy |\n| `.agents/skills/ship-to-production` | Docker \u2192 Postgres/Compose \u2192 Playwright e2e \u2192 deploy (Render default) \u2192 CI/CD |\n| `.claude/settings.json` | Starter allow-list / deny-list for Claude Code |\n| `.github/ISSUE_TEMPLATE/task.md` | The task template as a GitHub issue form |\n| `scripts/setup-claude.*` | Points Claude Code at `.agents/` (PowerShell for Windows, bash otherwise) |\n| `prompts.md` | The prompt sequence, from vague idea to a backlog running in a loop |\n| `coding-agents.md` | Free and cheap ways to get an agent |\n\n## Setup\n\n1. Copy everything into your repo (hidden folders included).\n2. Fill in the `<...>` parts of `AGENTS.md`. Keep it short; link docs, don't paste them.\n3. Using Claude Code? Run `scripts/setup-claude.ps1` (Windows) or `scripts/setup-claude.sh`.\n   Claude doesn't read `.agents/`, so this links skills and copies subagents into `.claude/`.\n4. Edit `.claude/settings.json` to match your real commands.\n5. Start every task in a new session.\n\n## Start in this order\n\n1. **Pick an agent** and stop comparing. One finished task beats ten threads on which is best.\n2. **One real, small task** you can check end to end. No MCP, skills or subagents yet.\n3. **Automate through the CLI.** If a service has an API or CLI, the agent can drive it.\n4. **Write down repeated work** as a markdown file the agent can follow next time.\n5. **Promote useful docs to skills** once you keep coming back to them.\n6. **Add subagents when context becomes the problem** - noisy or research-heavy work.\n\n## Habits that matter more than any file\n\n- **Reset the session often.** Long sessions rot; new sessions re-read `AGENTS.md`.\n- **Spec before code.** Vague tasks get filled with the agent's assumptions.\n- **Checkable stop conditions** for loops: \"all tests pass\", not \"make it better\".\n- **Verify in a fresh session.** The implementer is biased by its own history.\n- **Commit after every meaningful decision** so you can review and roll back.\n- **Fix the documents, not just the code**, so the correction sticks.\n\n## Permissions\n\nStart with the allow-list in `.claude/settings.json` and add commands as you\napprove them. Skip-permissions (\"YOLO\") mode is fine for an overnight loop in a\nthrowaway environment, never near production infrastructure, Terraform, cloud\nIAM or billing. For infrastructure: the agent generates the plan, you review it,\nyou run the destructive command.\n\n## Skills and subagents in one paragraph\n\nA **skill** is a repeatable procedure (`.agents/skills/<name>/SKILL.md` with a\nname and description); the agent picks it from your request. Don't write skills\nfrom scratch: do the task with the agent, correct it, then use prompt 9 in\n`prompts.md`. A **subagent** runs in its own clean context; the main session\nonly sees the result. When the main session launches PM \u2192 engineer \u2192 QA as\nsubagents, it becomes the orchestrator, and `/goal work through the backlog`\nruns it until the backlog is empty. This costs far more tokens than one engineer\nin a loop, so use it when the project earns it.\n"}, "AGENTS.md": {"what": "What every new session reads first - fill this in", "content": "# AGENTS.md\n\n<!-- Template. Replace the <...> parts and delete what you don't need.\n     Keep it short: link documents instead of copying them in. -->\n\n# Project\n\n<What the project does, in one or two sentences.>\n\nWhere things live:\n\n- `<frontend/>`: <the React app>\n- `<backend/>`: <the API and its tests>\n- `<e2e/>`: <end-to-end tests>\n- `_docs/`: plan, process, roles and guidelines\n\n# Commands\n\n- `<uv sync>`: install backend dependencies\n- `<uv run pytest>`: the whole backend suite\n- `<uv run pytest tests/test_home.py>`: one test file\n- `<npm --prefix frontend run dev>`: run the frontend\n- `<make run>` / `<make e2e>`: run the app / the end-to-end tests\n\n# Rules\n\n- Add dependencies in `<pyproject.toml>` / `<frontend/package.json>`, and ask first\n- Commit after every meaningful change\n- <Conventions to follow>\n\n# Do not touch\n\n- <Files and folders the agent must not change, e.g. .env, deploy secrets>\n- Ask before destructive commands: `rm -rf`, force push, dropping a database,\n  `terraform apply`, deleting cloud resources\n\n# Documents\n\n- `_docs/plan.md` - what we're building and why\n- `_docs/process.md` - how work is organized (tasks, roles, orchestrator)\n- `_docs/task-template.md` - the template for a groomed task\n- Before writing tests, read `_docs/testing-guidelines.md`\n- For anything touching the UI, read `<_docs/design-system.md>`\n"}, "CLAUDE.md": {"what": "Points Claude Code at AGENTS.md", "content": "@AGENTS.md\n"}, "prompts.md": {"what": "The prompt sequence, from vague idea to a backlog in a loop", "content": "# Prompts\n\nIn the order you use them. Start a new session for each step.\n\n## 1. Scope the idea (chat assistant, before any code)\n\n    I want to build <your idea>.\n\n    Help me set the scope for this project precisely. I want to brainstorm with you\n    and understand how the tool should work. Give me options.\n\n    Ask me one question at a time and keep your output short.\n\nWhen you're done:\n\n    Save everything to a markdown file that I can download.\n\nSave it as `_docs/plan.md` and commit.\n\n## 2. Choose the stack\n\n    Read _docs/plan.md. Propose multiple options for the tech stack and\n    explain each option.\n\n    Don't write code yet.\n\n## 3. Create the backlog\n\n    Create a backlog with tasks in _docs/tasks.md.\n\n    Each task should be small enough to finish in one session, and\n    independent enough that I could hand it to someone who has not read\n    the others.\n\n    Use this template for each task:\n\n    ## <number>. <title>\n    Goal: <one line>\n    Description: <two or three sentences on what the task involves>\n\n    The first task should be setting up an empty project with a passing test.\n\n    Don't write code yet.\n\nReview it: merge tasks that are too small, split ones that don't fit a session,\ncut what isn't MVP. Then:\n\n    Create a public GitHub repo for this project.\n    Move each task from _docs/tasks.md into a GitHub issue.\n\n(Needs `gh` authenticated.) From now on GitHub issues are the backlog.\n\n## 4. Groom, implement, test (one role, one fresh session each)\n\n    Groom issue #4\n    Implement issue #4\n    Test issue #4\n\nOn FAIL, start a new engineer session with the QA comment as input. Repeat\nuntil PASS.\n\n## 5. Run the backlog in a loop (Claude Code, Codex)\n\n    /goal work through the backlog\n\nUse a checkable stop condition: \"all issues are groomed\", \"all tests pass\",\n\"no file is over 200 lines\". Not \"make the code better\". No `/goal` in your\nagent? Build the same loop with stop hooks.\n\n## 6. Launch a subagent\n\n    Launch a subagent to implement #101. Follow the process.\n    Launch software engineer for #101\n\nThe second uses `.agents/agents/`. Claude Code needs a restart to see new definitions.\n\n## 7. Build and ship (uses the build-fullstack and ship-to-production skills)\n\n    Build stage 1 of the app from _docs/plan.md\n    Ship step 2: Postgres and Docker Compose\n\n## 8. Update the documents after corrections\n\n    Based on the corrections I made, find the relevant documents and update them.\n    Commit the current work before changing the documents.\n\n## 9. Save the session as a skill\n\n    Save this as a skill. Cover the workflow we followed and keep all the\n    corrections I made in mind, so the next agent can do the task correctly from\n    the start.\n\n    This skill is specific to this project, so don't create a global skill.\n\nKeep the last line: without it, Codex creates a global skill.\n"}, "coding-agents.md": {"what": "Free and cheap ways to get a coding agent", "content": "# Ways to get a coding agent\n\nPrices and quotas change fast. Check the plan pages before you pay.\n(Snapshot from the Coding Agent Setup Kit by Alexey Grigorev.)\n\n## Free\n\n- **OpenCode Zen** - several free models inside OpenCode. \"Contributor\" tiers\n  may use your data for training. Roughly one or two heavy sessions.\n- **OpenRouter** - model IDs ending in `:free` cost nothing; strict rate limits\n  until you add credit.\n\n## Cheap ($8-20/month)\n\n- **OpenCode Go** ($10) - with Zen, several hours of work a day\n- ChatGPT Plus ($20), Z.ai GLM Coding Plan Lite, MiniMax Token Plan, Command Code\n- **Pay per call** - direct API spend goes fast; cheaper models off-peak stretch it\n\n## Subscriptions\n\n- **ChatGPT Plus** ($20) - includes Codex\n- **Claude Pro** ($20) - includes Claude Code; heavy use needs Max ($100)\n- **GitHub Copilot** - token-based billing now\n- **Cursor** - reads `AGENTS.md` at the repo root, so this kit works there too\n\n## How to start\n\n1. A paid Codex or Claude subscription if you can.\n2. Otherwise free models in OpenCode Zen, then OpenCode Go when you hit limits.\n"}, "_docs/process.md": {"what": "Tasks, roles, the orchestrator lifecycle", "content": "# Process\n\n- Tasks are GitHub issues, one at a time\n- Read the acceptance criteria before starting and before closing\n- Commit regularly\n\n# Roles\n\n- PM - grooms a task before anyone implements it, follows `_docs/team/pm.md`\n- Engineer - implements one groomed task, follows `_docs/team/software-engineer.md`\n- QA - checks the result against the acceptance criteria, follows `_docs/team/qa-engineer.md`\n\n# Orchestrator\n\nThe main session is the orchestrator. It launches the PM, the engineer\nand QA as subagents. It does not groom, implement or test itself.\n\n# Lifecycle\n\n1. Pick the next open issue from the backlog\n2. PM grooms it\n3. Engineer implements it\n4. QA verifies it\n5. On FAIL, back to step 3 with the QA comment as input\n6. On PASS, close the issue\n7. Repeat until the backlog is empty\n\n# Rules\n\n- Do not skip step 2\n- The engineer does not close the issue\n- QA does not fix the code, only outputs PASS or FAIL\n- The orchestrator closes the issue only after QA outputs PASS\n\n# Parallel work (optional)\n\nWork in isolated git worktrees and run up to five agents in parallel.\nYou are the orchestrator. Your job is to:\n\n- Split the backlog into independent issue tracks\n- Give each agent a separate worktree and clear file ownership\n- Keep the agent slots full while eligible work remains\n- Send completed work to a fresh reviewer\n- Return review findings to the correct implementer\n- Merge approved work into the main branch one issue at a time\n- Coordinate the work. Never implement the issues yourself\n"}, "_docs/task-template.md": {"what": "A groomed task: goal, criteria, out of scope, constraints", "content": "# Goal\n\nOne or two sentences on what should be true when this is done.\n\n# Acceptance criteria\n\n- [ ] A statement you can check by looking at the result\n- [ ] One line per case, including the awkward ones\n\n# Out of scope\n\n- Something that does not belong in this task, moved to #TASK-NUMBER\n\n# Constraints\n\n- Files this should stay inside\n- Libraries to use\n- Guidelines to follow\n"}, "_docs/testing-guidelines.md": {"what": "Starter testing rules - grow it as you correct the agent", "content": "# Testing guidelines\n\n<!-- Starter version. Grow it every time you correct the agent about tests. -->\n\n- Every acceptance criterion gets at least one test that would fail without the change\n- Test behaviour through public interfaces (HTTP endpoints, UI, CLI), not private helpers\n- Backend: `<uv run pytest>`; frontend: `<npm --prefix frontend test>`; full stack: `<make e2e>`\n- End-to-end tests run against `docker compose` and use Playwright\n- A test that needs the network or a real database is an integration test: put it in `<tests/integration/>`\n- Report the exact command you ran and its pass/fail counts\n"}, "_docs/team/pm.md": {"what": "Product manager role: grooms tasks", "content": "# You're a Product Manager\n\nYou groom a task before anyone implements it.\n\n- Read the issue as written\n- Rewrite it using the template in `_docs/task-template.md`\n- Make the acceptance criteria checkable - someone should be able to\n  point at the screen and say yes or no\n- Think about the edge cases the person who filed it did not consider\n- Do not write any code\n\nDefinition of done:\n\n- The issue has all four sections filled in\n- Every acceptance criterion can be checked by looking at the result\n- Everything moved out of scope links to a follow-up issue\n- An engineer who has never spoken to you could implement it from the\n  issue and the documents it links\n\nIf something does not belong in this task, do not silently drop it.\nFile a follow-up issue and list it under out of scope with a link to\nthat issue, so it is clear what was moved and where it went.\n"}, "_docs/team/software-engineer.md": {"what": "Engineer role: implements one groomed task", "content": "# You're a Software Engineer\n\nYou implement one groomed task at a time.\n\n- Read the issue and implement what it describes\n- Implement against the acceptance criteria, do not change them\n- Stay inside the files and constraints the issue names\n- Write tests for what you built\n- Do not close the issue\n- Commit regularly\n\nDefinition of done:\n\n- Every acceptance criterion in the issue is implemented\n- Tests are written for the new behaviour, and the whole suite passes\n- The work is committed\n- The issue is still open, with a comment saying what you did\n\nIf an acceptance criterion is wrong, impossible, or contradicts\nanother one, create a comment on the issue about it.\n"}, "_docs/team/qa-engineer.md": {"what": "QA role: PASS or FAIL against the criteria", "content": "# You're a QA Engineer\n\nYou check finished work against the issue that specified it.\n\n- Read the acceptance criteria from the issue\n- Check each one against what the code actually does\n- Run the tests, and say which ones you ran\n- Look for the cases the criteria describe but the tests do not cover\n- Do not fix anything you find. Report it by creating a comment\n\nYour output is a verdict: PASS or FAIL. It is FAIL if a single\nacceptance criterion fails. Post it as a comment on the issue:\n\n    ## QA: FAIL\n\n    - [x] A visitor can create an account with a username and password - PASS\n    - [ ] A duplicate username shows a visible error - FAIL\n          Submitted an existing username and received an unhandled error\n\n    Tests: `uv run pytest`, 18 passed, 0 failed\n\nDefinition of done:\n\n- The comment starts with PASS or FAIL\n- Every acceptance criterion has a verdict against it\n- Every FAIL says what you did and what happened\n- The test command and its result are included\n- Nothing in the code was changed\n\nIgnore what the implementation says it does. Only the acceptance\ncriteria and the running code count.\n"}, ".agents/agents/pm.md": {"what": "Subagent definition for the PM", "content": "---\nname: pm\ndescription: Use this agent to groom a task before anyone implements it.\n---\n\nRead your role definition from _docs/team/pm.md\n"}, ".agents/agents/software-engineer.md": {"what": "Subagent definition for the engineer", "content": "---\nname: software-engineer\ndescription: Use this agent to execute a well-scoped coding assignment.\n---\n\nRead your role definition from _docs/team/software-engineer.md\n"}, ".agents/agents/qa-engineer.md": {"what": "Subagent definition for QA", "content": "---\nname: qa-engineer\ndescription: Use this agent to check finished work against the issue that specified it.\n---\n\nRead your role definition from _docs/team/qa-engineer.md\n"}, ".agents/skills/release/SKILL.md": {"what": "Skill: release a new version", "content": "---\nname: release\ndescription: Release a new version of the current project\n---\n\n# Release\n\n1. Inspect the project and determine its package registry.\n2. Run the tests and other required checks.\n3. Bump the version in the source of truth.\n4. Commit the change and push a version tag.\n5. Verify that the CI publishing job succeeds.\n"}, ".agents/skills/build-fullstack/SKILL.md": {"what": "Skill: mocked frontend \u2192 OpenAPI \u2192 FastAPI \u2192 database", "content": "---\nname: build-fullstack\ndescription: Build a full-stack web app from _docs/plan.md in stages - mocked frontend, OpenAPI contract, FastAPI backend, then a database\n---\n\n# Build a full-stack app\n\nEach stage ends with something that runs. Finish and commit a stage before\nstarting the next, and start each stage in a fresh session.\n\nTarget layout:\n\n    backend/      FastAPI app and its tests\n    frontend/     React app (TypeScript)\n    _docs/        plan.md and the other project documents\n    AGENTS.md\n    openapi.yaml  the frontend-backend contract\n\n## 1. Frontend with a mocked backend\n\nBuild the React app from `_docs/plan.md`. Centralize every backend call in one\nservices layer, and create a mock implementation of it so the whole app runs\nwithout a real backend. Add tests.\n\nDone when: `npm run dev` in `frontend/` shows the app and every screen in the\nplan can be clicked through against the mock.\n\n## 2. OpenAPI contract\n\nRead the frontend's services layer and write `openapi.yaml` at the repo root:\nevery endpoint, method, path, request body, response body, and which endpoints\nneed authentication.\n\nDone when: every function in the services layer maps to an operation in\n`openapi.yaml`.\n\n## 3. Backend with an in-memory store\n\nBuild a FastAPI backend in `backend/` that implements `openapi.yaml`. Use an\nin-memory store seeded with sample data. Hashed passwords and bearer tokens for\nauthenticated endpoints. Split into modules: routers, models, store, auth.\nWrite tests. Add a Makefile with `make run`.\n\nThen switch the frontend to the real backend client and fix CORS.\n\nDone when: backend tests pass, `/docs` matches `openapi.yaml`, and the frontend\nworks end to end against the running backend.\n\n## 4. Persistence\n\nReplace the in-memory store with SQLAlchemy on SQLite. The database URL comes\nfrom an environment variable. Stay database-agnostic (no SQLite-only features)\nso Postgres can be swapped in later.\n\nDone when: data survives a backend restart and all tests pass.\n"}, ".agents/skills/ship-to-production/SKILL.md": {"what": "Skill: Docker \u2192 Postgres \u2192 e2e \u2192 deploy \u2192 CI/CD", "content": "---\nname: ship-to-production\ndescription: Take a locally working full-stack app to production - one Docker image, Postgres, Docker Compose, e2e tests, deploy, CI/CD\n---\n\n# Ship to production\n\nStarting point: the app runs locally with SQLAlchemy (see the build-fullstack\nskill). Do one step per session and commit after each.\n\n## 1. One container\n\nWrite a two-stage Dockerfile: Node builds the frontend, then a Python image\nholds the backend plus the built static files. The backend serves the frontend.\n\nDone when: `docker run` serves the whole app on one port and the smoke test\nbelow passes.\n\n## 2. Postgres and Docker Compose\n\nAdd Postgres support to the backend. Then write `docker-compose.yaml` with two\nservices, Postgres and the app, with a health check so the app waits for the\ndatabase. Add database migrations (Alembic).\n\nDone when: `docker compose up --build` runs the app on Postgres and data\nsurvives `docker compose down` / `up`.\n\n## 3. Integration and end-to-end tests\n\nIntegration tests run against the Compose stack. Add a Playwright test in\n`e2e/` that performs the smoke test below. Add `make e2e`.\n\nDone when: `make e2e` passes on a clean checkout.\n\n## 4. Deploy\n\nDefault target: Render (web service from the Dockerfile + managed Postgres,\ndescribed in `render.yaml`). If the project uses AWS instead, use\nCloudFormation and a temporary admin user, and watch every step.\n\n- Generate the plan or blueprint, show it, and wait for approval before\n  creating or deleting cloud resources\n- Secrets go in the platform's environment settings, never in the repo\n\nDone when: the public URL passes the smoke test and the health endpoint\nreturns 200.\n\n## 5. CI/CD\n\nGitHub Actions on every push to main:\n\n- backend and frontend tests in parallel\n- build the Compose stack, run integration and e2e tests\n- deploy only if everything passed (Render deploy hook, or an AWS OIDC role)\n- check the health endpoint after the deploy\n\nDone when: a trivial change pushed to main shows up on the public URL.\n\n## Smoke test\n\n<Write the one user journey that proves the app works, e.g. \"create a session\nin window 1, join from window 2, change something in window 2, see it in\nwindow 1\".>\n"}, ".claude/settings.json": {"what": "Claude Code allow-list and deny-list", "content": "{\n  \"permissions\": {\n    \"allow\": [\n      \"Bash(git status)\",\n      \"Bash(git diff:*)\",\n      \"Bash(git log:*)\",\n      \"Bash(git add:*)\",\n      \"Bash(git commit:*)\",\n      \"Bash(gh issue view:*)\",\n      \"Bash(gh issue list:*)\",\n      \"Bash(gh issue comment:*)\",\n      \"Bash(uv sync)\",\n      \"Bash(uv run pytest:*)\",\n      \"Bash(npm test:*)\",\n      \"Bash(npm run:*)\",\n      \"Bash(make test)\",\n      \"Bash(make e2e)\"\n    ],\n    \"deny\": [\n      \"Bash(rm -rf:*)\",\n      \"Bash(git push --force:*)\",\n      \"Bash(git reset --hard:*)\",\n      \"Bash(terraform apply:*)\",\n      \"Bash(terraform destroy:*)\",\n      \"Bash(aws cloudformation delete-stack:*)\",\n      \"Read(./.env)\",\n      \"Read(./.env.*)\"\n    ]\n  }\n}\n"}, ".github/ISSUE_TEMPLATE/task.md": {"what": "The task template as a GitHub issue form", "content": "---\nname: Task\nabout: A groomed task, ready for an engineer\nlabels: task\n---\n\n## Goal\n\nOne or two sentences on what should be true when this is done.\n\n## Acceptance criteria\n\n- [ ] A statement you can check by looking at the result\n\n## Out of scope\n\n- Moved to #\n\n## Constraints\n\n- Files this should stay inside\n- Libraries to use\n- Guidelines to follow\n"}, "scripts/setup-claude.ps1": {"what": "Windows: link skills and copy subagents for Claude Code", "content": "# Makes Claude Code see the shared .agents/ folder.\n# Run from the repo root:  powershell -ExecutionPolicy Bypass -File scripts/setup-claude.ps1\n# Uses a directory junction, which works on Windows without admin rights.\n\nNew-Item -ItemType Directory -Force -Path .claude | Out-Null\n\nif (-not (Test-Path .claude/skills)) {\n    New-Item -ItemType Junction -Path .claude/skills -Target (Resolve-Path .agents/skills) | Out-Null\n    Write-Host \"Linked .claude/skills -> .agents/skills\"\n}\n\n# Claude reads subagents from .claude/agents. Copy them (re-run after edits).\nNew-Item -ItemType Directory -Force -Path .claude/agents | Out-Null\nCopy-Item .agents/agents/*.md .claude/agents/ -Force\nWrite-Host \"Copied subagents to .claude/agents (restart Claude Code to pick them up)\"\n"}, "scripts/setup-claude.sh": {"what": "macOS/Linux: same as above", "content": "#!/usr/bin/env bash\n# Makes Claude Code see the shared .agents/ folder. Run from the repo root.\nset -e\nmkdir -p .claude/agents\n[ -e .claude/skills ] || ln -s ../.agents/skills .claude/skills\ncp .agents/agents/*.md .claude/agents/\necho \"Linked skills and copied subagents. Restart Claude Code to pick up new agents.\"\n"}};
+
+const FIELDS = [
+  {k:"desc", label:"What the project does", hint:"One or two sentences.", area:true,
+   preset:"A web app that <your idea>. Users can <main action>."},
+  {k:"layout", label:"Where things live", hint:"One per line: path: what it holds", area:true,
+   preset:"frontend/: the React app (TypeScript, Vite)\nbackend/: the FastAPI app and its tests\ne2e/: Playwright end-to-end tests"},
+  {k:"install", label:"Install command", preset:"uv sync"},
+  {k:"test", label:"Run all tests", preset:"uv run pytest"},
+  {k:"testOne", label:"Run one test file", preset:"uv run pytest tests/test_home.py"},
+  {k:"run", label:"Run the app", preset:"make run"},
+  {k:"deps", label:"Where dependencies are declared", preset:"pyproject.toml and frontend/package.json"},
+  {k:"conventions", label:"Conventions", hint:"One per line.", area:true,
+   preset:"Backend code is split into routers, models, store, auth\nAll backend calls in the frontend go through the services layer"},
+  {k:"donttouch", label:"Do not touch", hint:"One per line.", area:true,
+   preset:".env and any secrets\nrender.yaml without asking"},
+  {k:"design", label:"Design system doc (optional)", preset:"_docs/design-system.md"},
+];
+
+const S = "\u0001", E = "\u0002";             // markers for filled values
+let vals = {};
+try { vals = JSON.parse(localStorage.getItem("ask-vals") || "{}"); } catch(e) { vals = {}; }
+const save = () => { try { localStorage.setItem("ask-vals", JSON.stringify(vals)); } catch(e) {} };
+const v = (k, ph) => (vals[k] && vals[k].trim()) ? S + vals[k].trim() + E : "<" + ph + ">";
+const lines = (k, ph, fmt) => {
+  const raw = (vals[k] || "").split("\n").map(s => s.trim()).filter(Boolean);
+  if (!raw.length) return fmt("<" + ph + ">");
+  return raw.map(s => fmt(S + s + E)).join("\n");
+};
+
+function agentsMd(){
+  const layout = (() => {
+    const raw = (vals.layout || "").split("\n").map(s => s.trim()).filter(Boolean);
+    if (!raw.length) return "- `<src/>`: <the application code>\n- `<tests/>`: <the tests>";
+    return raw.map(s => {
+      const i = s.indexOf(":");
+      return i > 0 ? "- `" + S + s.slice(0,i).trim() + E + "`: " + S + s.slice(i+1).trim() + E
+                   : "- " + S + s + E;
+    }).join("\n");
+  })();
+  const design = (vals.design && vals.design.trim())
+    ? "- For anything touching the UI, read `" + S + vals.design.trim() + E + "`\n" : "";
+  return `# AGENTS.md
+
+# Project
+
+${v("desc","What the project does, in one or two sentences.")}
+
+Where things live:
+
+${layout}
+- \`_docs/\`: plan, process, roles and guidelines
+
+# Commands
+
+- \`${v("install","install command")}\`: install dependencies
+- \`${v("test","test command")}\`: the whole suite
+- \`${v("testOne","one test file")}\`: one test file
+- \`${v("run","run command")}\`: run the app
+
+# Rules
+
+- Add dependencies in \`${v("deps","dependency file")}\`, and ask first
+- Commit after every meaningful change
+${lines("conventions","Conventions to follow", s => "- " + s)}
+
+# Do not touch
+
+${lines("donttouch","Files and folders the agent must not change", s => "- " + s)}
+- Ask before destructive commands: \`rm -rf\`, force push, dropping a database,
+  \`terraform apply\`, deleting cloud resources
+
+# Documents
+
+- \`_docs/plan.md\` - what we're building and why
+- \`_docs/process.md\` - how work is organized (tasks, roles, orchestrator)
+- \`_docs/task-template.md\` - the template for a groomed task
+- Before writing tests, read \`_docs/testing-guidelines.md\`
+${design}`;
+}
+function testingMd(){
+  return KIT["_docs/testing-guidelines.md"].content
+    .replace("`<uv run pytest>`", "`" + v("test","uv run pytest") + "`");
+}
+const GEN = {"AGENTS.md": agentsMd, "_docs/testing-guidelines.md": testingMd};
+const contentOf = p => GEN[p] ? GEN[p]() : KIT[p].content;
+const plain = s => s.replace(/[\u0001\u0002]/g, "");
+const PH = /<(?!!--)(?!\/?(?:br|p|b)\b)[^<>\n`]{1,80}>/g;
+const countPH = s => (plain(s).replace(/<!--[\s\S]*?-->/g,"").match(PH) || []).length;
+
+// ---------- file tree ----------
+const ORDER = Object.keys(KIT);
+let current = "AGENTS.md";
+function renderTree(){
+  const ul = document.getElementById("tree"); ul.innerHTML = "";
+  let lastDir = null;
+  ORDER.forEach(p => {
+    const dir = p.includes("/") ? p.slice(0, p.lastIndexOf("/")+1) : "";
+    if (dir !== lastDir){
+      if (dir){ const d = document.createElement("li"); d.className="dir"; d.textContent = dir; ul.appendChild(d); }
+      lastDir = dir;
+    }
+    const li = document.createElement("li"), b = document.createElement("button");
+    b.textContent = dir ? p.slice(dir.length) : p;
+    b.title = KIT[p].what;
+    if (p === current) b.setAttribute("aria-current","true");
+    if (GEN[p]){ const n = countPH(contentOf(p)); if (n){ const t=document.createElement("span"); t.className="todo"; t.textContent=n; t.title=n+" blanks left"; b.appendChild(t);} }
+    b.onclick = () => { current = p; location.hash = p.replace(/[^A-Za-z0-9]+/g,"-").replace(/^-|-$/g,""); renderTree(); renderFile(); };
+    li.appendChild(b); ul.appendChild(li);
+  });
+}
+
+// ---------- viewer ----------
+const esc = s => s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+function highlight(text){
+  return text.split("\n").map(line => {
+    let h = esc(line);
+    h = h.replace(/\u0001([^\u0002]*)\u0002/g, (m, x) => '<span class="fv">' + x + '</span>');
+    if (/^\s*&lt;!--.*--&gt;\s*$/.test(h) || /^\s*&lt;!--/.test(h) || /--&gt;\s*$/.test(h)) return '<span class="c">' + h + '</span>';
+    h = h.replace(/&lt;(?!!--)([^&\n`]{1,80}?)&gt;/g, (m) => '<span class="ph">' + m + '</span>');
+    if (/^#{1,3} /.test(line)) h = '<span class="h">' + h + '</span>';
+    return h;
+  }).join("\n");
+}
+function renderFile(){
+  document.getElementById("vpath").textContent = current;
+  document.getElementById("vwhat").textContent = KIT[current].what;
+  document.getElementById("vbody").innerHTML = highlight(contentOf(current));
+  renderProgress();
+}
+function renderProgress(){
+  const n = countPH(contentOf("AGENTS.md"));
+  document.getElementById("progress").innerHTML = n
+    ? "AGENTS.md has <b>" + n + " blank" + (n>1?"s":"") + "</b> left."
+    : "AGENTS.md is filled in. Download the kit and copy it into your repo.";
+}
+
+// ---------- form ----------
+function renderForm(){
+  const f = document.getElementById("form"); f.innerHTML = "";
+  FIELDS.forEach(fd => {
+    const w = document.createElement("div"); w.className = "field";
+    const id = "f-" + fd.k;
+    const lab = document.createElement("label"); lab.htmlFor = id; lab.textContent = fd.label;
+    const inp = document.createElement(fd.area ? "textarea" : "input");
+    inp.id = id; inp.value = vals[fd.k] || ""; inp.placeholder = fd.preset; inp.spellcheck = false;
+    inp.oninput = () => { vals[fd.k] = inp.value; save(); renderTree(); renderFile(); };
+    inp.onfocus = () => { if (current !== "AGENTS.md" && fd.k !== "test"){ current = "AGENTS.md"; renderTree(); renderFile(); } };
+    w.append(lab, inp);
+    if (fd.hint){ const s = document.createElement("small"); s.textContent = fd.hint; w.appendChild(s); }
+    f.appendChild(w);
+  });
+}
+document.getElementById("preset").onclick = () => { FIELDS.forEach(fd => { if (!vals[fd.k]) vals[fd.k] = fd.preset; }); save(); renderForm(); renderTree(); renderFile(); toast("Defaults filled. Replace the <...> parts that are left."); };
+document.getElementById("clear").onclick = () => { vals = {}; save(); renderForm(); renderTree(); renderFile(); toast("Cleared"); };
+
+// ---------- copy / download ----------
+let tt;
+function toast(msg){ const t = document.getElementById("toast"); t.textContent = msg; t.classList.add("show"); clearTimeout(tt); tt = setTimeout(() => t.classList.remove("show"), 2200); }
+document.getElementById("copy").onclick = async () => {
+  const text = plain(contentOf(current));
+  try { await navigator.clipboard.writeText(text); toast("Copied " + current); }
+  catch(e){ toast("Copy blocked by the browser. Select the text and copy it manually."); }
+};
+document.getElementById("dl").onclick = async () => {
+  if (!window.JSZip){ toast("Zip library didn't load. Check your connection and reload."); return; }
+  const zip = new JSZip(), root = zip.folder("agent-starter-kit");
+  ORDER.forEach(p => root.file(p, plain(contentOf(p)), p.endsWith(".sh") ? {unixPermissions:"755"} : {}));
+  const blob = await zip.generateAsync({type:"blob", platform:"UNIX"});
+  const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "agent-starter-kit.zip";
+  document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(a.href), 5000);
+  toast("Downloaded agent-starter-kit.zip");
+};
+
+// ---------- start ----------
+const fromHash = () => { const h = location.hash.slice(1); return ORDER.find(p => p.replace(/[^A-Za-z0-9]+/g,"-").replace(/^-|-$/g,"") === h); };
+current = fromHash() || "AGENTS.md";
+window.addEventListener("hashchange", () => { const p = fromHash(); if (p && p !== current){ current = p; renderTree(); renderFile(); } });
+renderForm(); renderTree(); renderFile();
+</script>
+</body>
+</html>
